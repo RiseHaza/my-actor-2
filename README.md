@@ -1,53 +1,119 @@
-[My Actor 2](https://apify.com/moving_beacon-owner1/my-actor-2?fpr=data)
+[My Actor 2](https://apify.com/fond_branch/my-actor-2?fpr=data)
 
-# Hotel Data Scraper
+# Python Crawlee & BeautifulSoup Actor Template
 
-This project is a robust web scraping solution built with Playwright and Python, designed to extract detailed hotel data from various hotel booking pages. The tool scrapes information such as hotel names, check-in/check-out dates, and prices, and exports the data into an Excel file. Additionally, it integrates seamlessly with Apify for storing the extracted data in a dataset for further processing.
+ 
 
-## Key Features
+This template example was built with [Crawlee for Python](https://crawlee.dev/python) to scrape data from a website using [Beautiful Soup](https://pypi.org/project/beautifulsoup4/) wrapped into [BeautifulSoupCrawler](https://crawlee.dev/python/api/class/BeautifulSoupCrawler).
 
-- **Accurate Data Extraction**: Scrapes hotel names, check-in/check-out dates, and prices for any provided hotel URL.
-- **Date Navigation**: Automatically navigates between calendar months to extract data for the required period.
-- **Excel Export**: Saves the extracted data to an Excel file for easy sharing and analysis.
-- **Apify Integration**: Pushes the extracted data to an Apify dataset, enabling cloud-based storage and further processing.
-- **Error Handling and Retries**: The scraper automatically retries failed attempts to ensure consistent data extraction.
-- **Price Formatting**: Cleans and formats prices, removing unnecessary characters such as currency symbols.
+## Quick Start
 
-## Benefits for You
-
-- **Easy Data Access**: Automatically extracts the data you need from multiple hotel booking pages.
-- **Time-Saving**: Eliminates manual data collection, saving time and improving efficiency.
-- **Scalable**: Can handle multiple hotel URLs in one run, ideal for large-scale data collection.
-- **Reliable**: Includes retry mechanisms to handle network errors and page loading issues.
-- **Flexible**: Can be easily customized to scrape additional data or integrate with other systems.
-
-1. **Configure Input Data**:
-
-Provide a list of hotel URLs in the `startUrls` key of the input. Here's an example:
+Once you've installed the dependencies, start the Actor:
 
 ```
-{
-  "startUrls": [
-    "https://www.example.com/hotel1",
-    "https://www.example.com/hotel2"
-  ]
-}
+$apify run
 ```
-2. **Run the Scraper**:
 
-Once the setup is complete, run the scraper
-The script will:
+Once your Actor is ready, you can push it to the Apify Console:
 
-- Extract data from each provided hotel URL.
-- Save the data to an Excel file (named with a timestamp for easy identification).
-- Push the data to the Apify dataset for cloud-based storage.
+```
+apify login # first, you need to log in if you haven't already done so
 
-## Output
+apify push
+```
 
-- **Excel File**: The extracted data will be saved in an Excel file (`hotel_data_<timestamp>.xlsx`).
-- **Apify Dataset**: All the extracted data will be pushed to your Apify dataset for further processing or storage.
+## Project Structure
 
-## Customization
+```
+.actor/
+├── actor.json # Actor config: name, version, env vars, runtime settings
+├── dataset_schena.json # Structure and representation of data produced by an Actor
+├── input_schema.json # Input validation & Console form definition
+└── output_schema.json # Specifies where an Actor stores its output
+src/
+└── main.py # Actor entry point and orchestrator
+storage/ # Local storage (mirrors Cloud during development)
+├── datasets/ # Output items (JSON objects)
+├── key_value_stores/ # Files, config, INPUT
+└── request_queues/ # Pending crawl requests
+Dockerfile # Container image definition
+```
 
-- You can adjust the `extract_dates_and_prices` function to scrape additional information, such as amenities or room details.
-- Modify the `startUrls` list to include any hotel URLs you wish to scrape.
+For more information, see the [Actor definition](https://docs.apify.com/platform/actors/development/actor-definition) documentation.
+
+## How it works
+
+This code is a Python script that uses BeautifulSoup to scrape data from a website. It then stores the website titles in a dataset.
+
+- The crawler starts with URLs provided from the input `startUrls` field defined by the input schema. Number of scraped pages is limited by `maxPagesPerCrawl` field from the input schema.
+- The crawler uses `requestHandler` for each URL to extract the data from the page with the BeautifulSoup library and to save the title and URL of each page to the dataset. It also logs out each result that is being saved.
+
+## What's included
+
+- **[Apify SDK](https://docs.apify.com/sdk/python/)** - toolkit for building [Actors](https://apify.com/actors)
+- **[Crawlee for Python](https://crawlee.dev/python/)** - web scraping and browser automation library
+- **[Input schema](https://docs.apify.com/platform/actors/development/input-schema)** - define and easily validate a schema for your Actor's input
+- **[Dataset](https://docs.apify.com/sdk/python/docs/concepts/storages#working-with-datasets)** - store structured data where each object stored has the same attributes
+- **[Beautiful Soup](https://pypi.org/project/beautifulsoup4/)** - a library for pulling data out of HTML and XML files
+- **[Proxy configuration](https://docs.apify.com/platform/proxy)** - rotate IP addresses to prevent blocking
+
+## Resources
+
+- [Quick Start](https://docs.apify.com/platform/actors/development/quick-start) guide for building your first Actor
+- [Video introduction to Python SDK](https://www.youtube.com/watch?v=C8DmvJQS3jk)
+- [Webinar introducing to Crawlee for Python](https://www.youtube.com/live/ip8Ii0eLfRY)
+- [Apify Python SDK documentation](https://docs.apify.com/sdk/python/)
+- [Crawlee for Python documentation](https://crawlee.dev/python/docs/quick-start)
+- [Python tutorials in Academy](https://docs.apify.com/academy/python)
+- [Integration with Zapier](https://apify.com/integrations), Make, Google Drive and others
+- [Video guide on getting data using Apify API](https://www.youtube.com/watch?v=ViYYDHSBAKM)
+
+## Creating Actors with templates
+
+[Video](https://www.youtube.com/embed/u-i-Korzf8w?enablejsapi=1&rel=0)
+
+## Getting started
+
+For complete information [see this article](https://docs.apify.com/platform/actors/development#build-actor-at-apify-console). In short, you will:
+
+1. Build the Actor
+2. Run the Actor
+
+## Pull the Actor for local development
+
+If you would like to develop locally, you can pull the existing Actor from Apify console using Apify CLI:
+
+1. Install `apify-cli`
+
+**Using Homebrew**
+
+```
+$brew install apify-cli
+```
+
+**Using NPM**
+
+```
+$npm -g install apify-cli
+```
+2. Pull the Actor by its unique `<ActorId>`, which is one of the following:
+
+- unique name of the Actor to pull (e.g. "apify/hello-world")
+- or ID of the Actor to pull (e.g. "E2jjCZBezvAZnX8Rb")
+
+You can find both by clicking on the Actor title at the top of the page, which will open a modal containing both Actor unique name and Actor ID.
+
+This command will copy the Actor into the current directory on your local machine.
+
+```
+$apify pull <ActorId>
+```
+
+## Documentation reference
+
+To learn more about Apify and Actors, take a look at the following resources:
+
+- [Apify SDK for JavaScript documentation](https://docs.apify.com/sdk/js)
+- [Apify SDK for Python documentation](https://docs.apify.com/sdk/python)
+- [Apify Platform documentation](https://docs.apify.com/platform)
+- [Join our developer community on Discord](https://discord.com/invite/jyEM2PRvMU)
